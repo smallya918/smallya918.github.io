@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>作業09</title>
+	<style>
+		h4 {
+            color: orange;
+        }
+        h3 {
+            color: purple;
+        }
+        label {
+            color: #7E3D76;
+        }
+        input {
+            color: brown;
+        }
+        div {
+            color: #7E3D76;
+            margin: 5px;
+        }
+	</style>
+</head>
+<body>
+<form id="form01">
+	姓名:<input type="text" name="name01" value="顏嘉慧"><br>
+	收件住址:<input type="text" name="address01" value="台北市內湖區大湖山莊街111號"><br>
+	電話:<input type="tel" name="tel01" value="0987123321"><br>
+	電子郵件:<input type="email" name="email01" value="smallya918@gmail.com"><br>
+	指定送貨日期:<input type="date" name="date01"><br>
+	水果種類:<br>
+	<input type="checkbox" name="fruit" id="fruit01" value="花蓮大西瓜A級(24-26斤)">花蓮大西瓜A級(24-26斤) 999元;
+	購買數量:<input type="number" name="number01"><br>
+	<input type="checkbox" name="fruit" id="fruit02" value="極品巨鑽牛奶果(2.5公斤)">極品巨鑽牛奶果(2.5公斤) 1070元;
+	購買數量:<input type="number" name="number02"><br>
+	<input type="checkbox" name="fruit" id="fruit03" value="台東何班長有機青梅(10斤)">台東何班長有機青梅(10斤) 820元;
+	購買數量:<input type="number" name="number03"><br>
+	<input type="checkbox" name="fruit" id="fruit04" value="鮭魚葡萄(2公斤)">鮭魚葡萄(2公斤) 1172元;
+	購買數量:<input type="number" name="number04"><br>
+</form>
+<button onclick="shoppingInfo()"><h4>結帳</h4></button>
+<div id="demo"></div>
+
+<script>
+	function shoppingInfo() {
+		let text = "<h4>您的購物資訊如下:</h4>";
+		let x = document.getElementById("form01");
+		let item = "";
+		let sumToPay = 0;
+
+		const fruit = function (fruitType, fruitPrice) {
+			this.Type = fruitType;
+			this.Price = fruitPrice;
+			this.subTotal = function (no) {
+				text += "水果種類: " + this.Type + "<br>";
+				text += "購買數量: " + no + " 單位<br>";
+				text += "價格小計: " + (this.Price * no) + "元<br><br>";
+			};
+		};
+
+		const fruit01 = new fruit("花蓮大西瓜A級(24-26斤)", 999);
+		const fruit02 = new fruit("極品巨鑽牛奶果(2.5公斤)", 1070);
+		const fruit03 = new fruit("台東何班長有機青梅(10斤)", 820);
+		const fruit04 = new fruit("鮭魚葡萄(2公斤)", 1172);
+
+		const infoLabels = ["姓名", "收件地址", "電話", "電子郵件", "指定送貨日期"];
+		for (let i = 0; i < 5; i++) {
+			text += infoLabels[i] + ": " + x.elements[i].value + "<br>";
+		}
+
+		const fruitData = [
+			{ checkboxIndex: 5, qtyIndex: 6, fruit: fruit01 },
+			{ checkboxIndex: 7, qtyIndex: 8, fruit: fruit02 },
+			{ checkboxIndex: 9, qtyIndex: 10, fruit: fruit03 },
+			{ checkboxIndex: 11, qtyIndex: 12, fruit: fruit04 }
+		];
+
+		for (let i = 0; i < fruitData.length; i++) {
+			let item = fruitData[i];
+			if (x.elements[item.checkboxIndex].checked) {
+				let qty = parseInt(x.elements[item.qtyIndex].value) || 0;
+				sumToPay += item.fruit.Price * qty;
+				item.fruit.subTotal(qty);
+			}
+		}
+
+		text += "<h3>價格合計: " + sumToPay + " 元</h3>";
+		document.getElementById("demo").innerHTML = text;
+	}
+</script>
+</body>
+</html>
