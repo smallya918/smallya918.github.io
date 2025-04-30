@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8">
+	<title>作業10</title>
+	<style>
+		h4 {
+			color: #BB3D00;
+		}
+
+		label {
+		    color: #3D7878;
+		}
+
+		input {
+		    color: #7E3D76;
+		}
+
+		div {
+		    color: #984B4B;
+			margin: 5px;
+		}
+		table {
+		    width: 40%;
+		    border-color: orange;
+		    border-style: solid;
+		    border-collapse: collapse;
+		}
+		tr {
+		     text-align: left;
+		     border-color: orange;
+		     border-style: solid;
+		}
+		td {
+		    vertical-align: middle;
+		    border-color: orange;
+		    border-style: solid;
+		}
+		td:nth-child(1){
+		    color: #FFD700;
+		}
+
+	</style>
+</head>
+<body>
+<form id="form01">
+	姓名:<input type="text" name="name01" value="顏嘉慧" id="name"><br>
+	收件住址:<input type="text" name="address01" value="台北市內湖區大湖山莊街111號" id="address"><br>
+	電話:<input type="tel" name="tel01" value="0987123321" id="tel"><br>
+	電子郵件:<input type="email" name="email01" value="smallya918@gmail.com" id="email"><br>
+	指定送貨日期:<input type="date" name="date01" id="date"><br>
+	水果種類:<br>
+	<input type="checkbox" name="fruit" id="fruit01" value="花蓮大西瓜A級(24-26斤)">花蓮大西瓜A級(24-26斤) 999元;
+	購買數量:<input type="number" name="number01" id="fruit01Num"><br>
+	<input type="checkbox" name="fruit" id="fruit02" value="極品巨鑽牛奶果(2.5公斤)">極品巨鑽牛奶果(2.5公斤) 1070元;
+	購買數量:<input type="number" name="number02" id="fruit02Num"><br>
+	<input type="checkbox" name="fruit" id="fruit03" value="台東何班長有機青梅(10斤)">台東何班長有機青梅(10斤) 820元;
+	購買數量:<input type="number" name="number03" id="fruit03Num"><br>
+	<input type="checkbox" name="fruit" id="fruit04" value="鮭魚葡萄(2公斤)">鮭魚葡萄(2公斤) 1172元;
+	購買數量:<input type="number" name="number04" id="fruit04Num"><br>
+</form>
+
+<button id="submitBtn" onclick="shoppingInfo()"><h4>送出</h4></button>
+<div id="demo"></div>
+<script>
+	var fruit = function (fruitType, fruitPrice, no){
+	  this.Type = fruitType;
+	  this.Price = fruitPrice;
+	  this.No = no;
+	  this.subTotal = function(no){
+	    text += "<tr>";
+	    text += "<td>水果種類 </td>" + "<td>" + this.Type + "</td>" + "<td>共" + this.No + "單位</td>";
+	    text += "<td>小計 " + this.Price * this.No + "元</td>";
+	    text += "</tr>";
+	  };
+	};
+	var fruit01 = new fruit("花蓮大西瓜A級(24-26斤)",999, 0);
+	var fruit02 = new fruit("極品巨鑽牛奶果(2.5公斤)",1070, 0);
+	var fruit03 = new fruit("台東何班長有機青梅(10斤)",820, 0);
+	var fruit04 = new fruit("鮭魚葡萄(2公斤)",1172, 0);
+	var isSubmitted = false; // 用來追蹤是否已經提交過資料
+
+	function shoppingInfo() {
+	    var x = document.getElementById("form01");
+	    var item = "";
+	    var sumToPay = 0;
+	    var i;
+	    text = "<h4>您的購物資訊如下:</h4>"; // 重置 text 變數
+	    text += "<table>";
+	    for (i = 0; i < 5; i++) {
+	        text += "<tr>";
+	        switch (i) {
+	            case 0: item = "姓名: "; break;
+	            case 1: item = "收件住址: "; break;
+	            case 2: item = "電話: "; break;
+	            case 3: item = "電子郵件: "; break;
+	            case 4: item = "指定送貨日期: "; break;
+	        }
+	        text += "<tr>";
+	        text += "<td>" + item + "</td>" + "<td>" + x.elements[i].value + "</td>";
+	        text += "</tr>";
+	    }
+
+	    fruit01 = new fruit("花蓮大西瓜A級(24-26斤)",999, parseInt(document.getElementById("fruit01Num").value));
+	    fruit02 = new fruit("極品巨鑽牛奶果(2.5公斤)",1070, parseInt(document.getElementById("fruit02Num").value));
+	    fruit03 = new fruit("台東何班長有機青梅(10斤)",820, parseInt(document.getElementById("fruit03Num").value));
+	    fruit04 = new fruit("鮭魚葡萄(2公斤)",1172, parseInt(document.getElementById("fruit04Num").value));
+
+	    for (i = 5; i <= 11; i++) {
+	        if (x.elements[i].checked === true) {
+	            switch (i) {
+	                case 5: fruit01.subTotal(fruit01.No);
+	                  sumToPay += fruit01.Price * fruit01.No;
+	                  break;
+	                case 7: fruit02.subTotal(fruit02.No);
+	                  sumToPay += fruit02.Price * fruit02.No;
+	                  break;
+	                case 9: fruit03.subTotal(fruit03.No);
+	                  sumToPay += fruit03.Price * fruit03.No;
+	                  break;
+	                case 11: fruit04.subTotal(fruit04.No);
+	                  sumToPay += fruit04.Price * fruit04.No;
+	                  break;
+	            }
+	        }
+	    }
+
+	    text += "<tr>";
+	    text += "<td>價格合計 </td>" + "<td>" + sumToPay + "元</td>";
+	    text += "</tr>";
+	    text += "</table>";
+	    document.getElementById("demo").innerHTML = text;
+
+	    if (!isSubmitted) { // 如果尚未提交過資料
+	      document.getElementById("submitBtn").innerHTML = "<h4>確認修正</h4>";
+	      isSubmitted = true; // 設定為已提交過資料
+	    }
+	}
+</script>
+
+</body>
+
+</html>
